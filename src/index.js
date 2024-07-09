@@ -1,37 +1,36 @@
-const express = require("express")
-const bodyParser = require("body-parser")
+const express = require("express");
+const bodyParser = require("body-parser");
 
-const { PORT } = require("./config/serverConfig")
+const { PORT } = require("./config/serverConfig");
+const { connectDB } = require("./config/db");
 
-const app = express()
+const app = express();
 
 process.on("uncaughtException", (err) => {
-    console.log(`Error Name: ${err.name} Error: ${err.message}`)
-    console.log(`Shutting down the server due to Uncaught Exception`)
+  console.log(`Error Name: ${err.name} Error: ${err.message}`);
+  console.log(`Shutting down the server due to Uncaught Exception`);
 
-    process.exit(1)
-
-})
-
-
+  process.exit(1);
+});
 
 const setupAndStart = () => {
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
 
-    app.use(bodyParser.json())
-    app.use(bodyParser.urlencoded({ extended: true }))
+  const server = app.listen(PORT, () => {
+    console.log(`Server started at port ${PORT}`);
+  });
 
-    const server = app.listen(PORT, () => {
-        console.log(`Server started at port ${PORT}`)
-    })
+  connectDB();
 
-    process.on("unhandledRejection", (err) => {
-        console.log(`Error Name: ${err.name} Error: ${err.message}`)
-        console.log(`Shutting down the server due to Unhandled Promise Rejection`)
+  process.on("unhandledRejection", (err) => {
+    console.log(`Error Name: ${err.name} Error: ${err.message}`);
+    console.log(`Shutting down the server due to Unhandled Promise Rejection`);
 
-        server.close(() => {
-            process.exit(1)
-        })
-    })
-}
+    server.close(() => {
+      process.exit(1);
+    });
+  });
+};
 
-setupAndStart()
+setupAndStart();
