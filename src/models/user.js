@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-
+const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: [true, "Please enter your email"],
+    required: [true, "Please enter your name"],
     maxlength: [30, "Name cannot exceed 30 characters"],
     minlength: [4, "Name should have atleast 4 characters"],
   },
@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter your email ID"],
     unique: true,
-    validate: [validator.isEmail, "Please enter a valid email"],
+    validate: [validator.isEmail, "Please Enter a valid Email"],
   },
   password: {
     type: String,
@@ -20,13 +20,13 @@ const userSchema = new mongoose.Schema({
     minlength: [8, "Password should be greater than 8 characters"],
     select: false,
   },
-  mobilenumber: {
+  mobileNumber: {
     type: String,
     validate: {
       validator: function (value) {
         return /^[0-9]{10}$/.test(value);
       },
-      message: "Mobile number must be a 10-digit number",
+      message: "Mobile number must be a 10-digit number.",
     },
   },
   role: {
@@ -50,6 +50,14 @@ const userSchema = new mongoose.Schema({
   resetPasswordExpire: Date,
 });
 
-const User = mongoose.model("User", userSchema);
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+
+  this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync(10));
+});
+
+const User = mongoose.model("users", userSchema);
 
 module.exports = User;
