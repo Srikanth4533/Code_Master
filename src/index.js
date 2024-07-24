@@ -2,15 +2,15 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const Strategy = require("passport-google-oauth20").Strategy;
 
 const cookieSession = require("cookie-session");
 
 const {
   PORT,
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  GOOGLE_CALL_BACK,
+  CLIENT_ID,
+  CLIENT_SECRET,
+  CALL_BACK,
 } = require("./config/serverConfig");
 const { connectDB } = require("./config/db");
 
@@ -39,11 +39,11 @@ connectDB();
 // });
 
 passport.use(
-  new GoogleStrategy(
+  new Strategy(
     {
-      clientID: GOOGLE_CLIENT_ID,
-      clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: GOOGLE_CALL_BACK,
+      clientID: CLIENT_ID,
+      clientSecret: CLIENT_SECRET,
+      callbackURL: CALL_BACK,
       scope: ["profile", "email"],
     },
     function (accessToken, refreshToken, profile, done) {
