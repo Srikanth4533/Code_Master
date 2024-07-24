@@ -6,7 +6,11 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 const cookieSession = require("cookie-session");
 
-const { PORT } = require("./config/serverConfig");
+const {
+  PORT,
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+} = require("./config/serverConfig");
 const { connectDB } = require("./config/db");
 
 const authRoutes = require("./routes/v1/auth");
@@ -36,9 +40,8 @@ connectDB();
 passport.use(
   new GoogleStrategy(
     {
-      clientID:
-        "581579412132-1912q2d1sq07ic4o5a73002oaj4a1mdq.apps.googleusercontent.com",
-      clientSecret: "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",
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: "/auth/google/callback",
       scope: ["profile", "email"],
     },
