@@ -10,6 +10,7 @@ const {
   PORT,
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
+  GOOGLE_CALL_BACK,
 } = require("./config/serverConfig");
 const { connectDB } = require("./config/db");
 
@@ -42,7 +43,7 @@ passport.use(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
+      callbackURL: GOOGLE_CALL_BACK,
       scope: ["profile", "email"],
     },
     function (accessToken, refreshToken, profile, done) {
