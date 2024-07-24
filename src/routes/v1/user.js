@@ -1,10 +1,16 @@
 const express = require("express");
 
-const { register } = require("../../controllers/user-controller");
+const {
+  register,
+  forgotPassword,
+  resetPassword,
+} = require("../../controllers/user-controller");
 
 const router = express.Router();
 
-router.post("/register", register);
+router.post("/users/register", register);
+router.post("/users/forgotPassword", forgotPassword);
+router.patch("/users/forgotPassword/:token", resetPassword);
 
 router.post("/sri", (req, res) => {
   console.log("srikanth");
