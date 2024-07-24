@@ -1,9 +1,10 @@
 const nodeMailer = require("nodemailer");
-
-const EMAIL_USER = "d2c07bc582d467";
-const EMAIL_PASS = "324e40fd3b004a";
-const EMAIL_HOST = "sandbox.smtp.mailtrap.io";
-const EMAIL_PORT = 25;
+const {
+  EMAIL_HOST,
+  EMAIL_PORT,
+  EMAIL_PASS,
+  EMAIL_USER,
+} = require("../config/serverConfig");
 
 const sendEmail = async (option) => {
   // CREATE A TRANSPORTER
