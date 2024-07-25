@@ -2,17 +2,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const passport = require("passport");
-const Strategy = require("passport-google-oauth20").Strategy;
 
 const cookieSession = require("cookie-session");
 
-const {
-  PORT,
-  CLIENT_ID,
-  CLIENT_SECRET,
-  CALL_BACK,
-} = require("./config/serverConfig");
+const { PORT } = require("./config/serverConfig");
 const { connectDB } = require("./config/db");
+
+require("./utils/passport");
 
 const authRoutes = require("./routes/v1/auth");
 
@@ -31,33 +27,11 @@ app.use(
 // DB Connection
 connectDB();
 
-// process.on("uncaughtException", (err) => {
-//   console.log(`Error Name: ${err.name} Error: ${err.message}`);
-//   console.log(`Shutting down the server due to Uncaught Exception`);
+process.on("uncaughtException", (err) => {
+  console.log(`Error Name: ${err.name} Error: ${err.message}`);
+  console.log(`Shutting down the server due to Uncaught Exception`);
 
-//   process.exit(1);
-// });
-
-passport.use(
-  new Strategy(
-    {
-      clientID: CLIENT_ID,
-      clientSecret: CLIENT_SECRET,
-      callbackURL: CALL_BACK,
-      scope: ["profile", "email"],
-    },
-    function (accessToken, refreshToken, profile, done) {
-      return done(null, profile);
-    }
-  )
-);
-
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
+  process.exit(1);
 });
 
 app.use(passport.initialize());
@@ -113,14 +87,14 @@ const setupAndStart = async () => {
     console.log(`Server started at port ${PORT}`);
   });
 
-  // process.on("unhandledRejection", (err) => {
-  //   console.log(`Error Name: ${err.name} Error: ${err.message}`);
-  //   console.log(`Shutting down the server due to Unhandled Promise Rejection`);
+  process.on("unhandledRejection", (err) => {
+    console.log(`Error Name: ${err.name} Error: ${err.message}`);
+    console.log(`Shutting down the server due to Unhandled Promise Rejection`);
 
-  //   server.close(() => {
-  //     process.exit(1);
-  //   });
-  // });
+    server.close(() => {
+      process.exit(1);
+    });
+  });
 };
 
 setupAndStart();
